@@ -1,6 +1,9 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 
 const Login: React.FC = () => {
+    const location = useLocation();
+    const message = location.state?.message;
     const clientId = '0f7a19684fdd4fc2940aa0d59c3c6013';
     const redirectUri = 'http://localhost:3000/callback';
     const scope = 'playlist-read-private';
@@ -12,6 +15,7 @@ const Login: React.FC = () => {
 
     return (
         <div>
+            {message && <p>{message}</p>}
             <button onClick={handleLogin}>Login with Spotify</button>
         </div>
     )

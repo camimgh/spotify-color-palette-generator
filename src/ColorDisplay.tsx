@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import './ColorDisplay.css';
 
 interface AudioFeatures {
   danceability: number;
   energy: number;
   valence: number;
+  tempo: number
 }
 
 // Use euclidean distance to calculate distance between 2 songs
@@ -12,7 +14,8 @@ const euclideanDistance = (a: AudioFeatures, b: AudioFeatures): number => {
   return Math.sqrt(
     (a.danceability - b.danceability) ** 2 +
     (a.energy - b.energy) ** 2 +
-    (a.valence - b.valence) ** 2 
+    (a.valence - b.valence) ** 2 +
+    (a.tempo - b.tempo) ** 2
   );
 }
 
@@ -25,15 +28,17 @@ const averageAudioFeatures = (featuresArray: AudioFeatures[]): AudioFeatures => 
       acc.danceability += features.danceability;
       acc.energy += features.energy;
       acc.valence += features.valence;
+      acc.tempo += features.tempo
       return acc;
     },
-    { danceability: 0, energy: 0, valence: 0}
+    { danceability: 0, energy: 0, valence: 0, tempo: 0}
   );
 
   return {
     danceability: summedFeatures.danceability / totalSongs,
     energy: summedFeatures.energy / totalSongs,
     valence: summedFeatures.valence / totalSongs,
+    tempo: summedFeatures.tempo / totalSongs
   };
 };
 
@@ -79,10 +84,11 @@ const mapRange = (
 
 // Function to generate a color based on audio features
 const generateColor = (features: AudioFeatures): string => {
-  const { danceability, energy, valence } = features;
+  const { danceability, energy, valence, tempo } = features;
 
   // Map valence to hue (0–360) -> Blue (sad) to Red (happy)
-  const hue = mapRange(valence, 0, 1, 0, 360);
+//   const hue = mapRange(valence, 0, 1, 0, 360);
+    const hue = mapRange(tempo, 0, 500, 0, 360)
 
   // Map energy to saturation (0–100%) -> More energy, more saturation
   const saturation = mapRange(energy, 0, 1, 0, 100);
@@ -96,10 +102,16 @@ const generateColor = (features: AudioFeatures): string => {
 
 interface ColorDisplayProps {
     playlistId: string;
+    onBack: () => void;
 }
 
-const ColorDisplay: React.FC<ColorDisplayProps> = ( { playlistId }) => {
-  const [colors, setColors] = useState<string[]>([]);
+const ColorDisplay: React.FC<ColorDisplayProps> = ( { playlistId, onBack }) => {
+    const navigate = useNavigate();
+
+    const handleBackClick = () => {
+        onBack();
+    }
+    const [colors, setColors] = useState<string[]>([]);
     const processAudioFeatures = (features: AudioFeatures[]) => {
         const maxIterations = 10;
         const clusters = kMeansClustering(features, 9, maxIterations)
@@ -109,8 +121,7 @@ const ColorDisplay: React.FC<ColorDisplayProps> = ( { playlistId }) => {
             const avgFeatures = averageAudioFeatures(cluster);
             return generateColor(avgFeatures);
         });
-
-    setColors(generatedColors)
+        return generatedColors;
 }
   useEffect(() => {
     const fetchPlaylistTracks = async () => {
@@ -133,7 +144,8 @@ const ColorDisplay: React.FC<ColorDisplayProps> = ( { playlistId }) => {
             });
             const audioFeaturesData = await audioFeaturesResponse.json();
 
-            const newColors = processAudioFeatures(audioFeaturesData.audio_features);
+            const generatedColors = processAudioFeatures(audioFeaturesData.audio_features);
+            setColors(generatedColors);
         } catch (err) {
             console.error('Error fetching playlist data:', err)
         }
@@ -143,16 +155,20 @@ const ColorDisplay: React.FC<ColorDisplayProps> = ( { playlistId }) => {
   }, [playlistId]);
 
     return (
-        <div className="color-container">
-            <div className="color-grid">
-                {colors.map((color, index) => (
-                    <div
-                        key={index}
-                        className="color-box"
-                        style={{ backgroundColor: color}}
-                    ></div>
-                ))}
+        <div className="color-display">
+            <button className="back-button" onClick={handleBackClick}>← Back to Playlists</button>
+            <div className="color-container">
+                <div className="color-grid">
+                    {colors.map((color, index) => (
+                        <div
+                            key={index}
+                            className="color-box"
+                            style={{ backgroundColor: color}}
+                        ></div>
+                    ))}
+                </div>
             </div>
+
         </div>
     )
 }

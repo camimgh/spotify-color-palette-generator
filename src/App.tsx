@@ -10,6 +10,9 @@ import PlaylistSelector from "./PlaylistSelector";
 
 const App: React.FC = () => {
   const [selectedPlaylistId, setSelectedPlaylist] = useState<string | null>(null);
+  const handleBack = () => {
+    setSelectedPlaylist(null);
+  }
   return (
     <Router>
       <Routes>
@@ -18,7 +21,7 @@ const App: React.FC = () => {
         <Route path="/" element={
           <PrivateRoute>
             {selectedPlaylistId ? (
-              <ColorDisplay playlistId={selectedPlaylistId} /> ) : 
+              <ColorDisplay playlistId={selectedPlaylistId} onBack={handleBack}/> ) : 
               (
                 <PlaylistSelector onSelectPlaylist={setSelectedPlaylist} />
               ) }

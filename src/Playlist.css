@@ -1,0 +1,18 @@
+.playlist-card {
+    display: flex;
+    width: 80%;
+    max-width: 0.5vw;
+    border: 1px solid #ccc;
+}
+
+.playlist-info {
+
+}
+
+.playlist-title {
+
+}
+
+.playlist-description {
+
+}
