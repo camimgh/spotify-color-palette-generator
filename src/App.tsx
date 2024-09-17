@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import ColorDisplay from "./ColorDisplay";
+import Login from "./Login";
+import Callback from "./Callback";
 import "./App.css";
 
 // Define the type for audio features
@@ -7,8 +10,6 @@ interface AudioFeatures {
   danceability: number;
   energy: number;
   valence: number;
-  tempo: number;
-  acousticness: number;
 }
 
 // Use euclidean distance to calculate distance between 2 songs
@@ -16,9 +17,7 @@ const euclideanDistance = (a: AudioFeatures, b: AudioFeatures): number => {
   return Math.sqrt(
     (a.danceability - b.danceability) ** 2 +
     (a.energy - b.energy) ** 2 +
-    (a.valence - b.valence) ** 2 +
-    (a.tempo - b.tempo) ** 2 +
-    (a.acousticness - b.acousticness) ** 2
+    (a.valence - b.valence) ** 2 
   );
 }
 
@@ -31,19 +30,15 @@ const averageAudioFeatures = (featuresArray: AudioFeatures[]): AudioFeatures => 
       acc.danceability += features.danceability;
       acc.energy += features.energy;
       acc.valence += features.valence;
-      acc.tempo += features.tempo;
-      acc.acousticness += features.acousticness;
       return acc;
     },
-    { danceability: 0, energy: 0, valence: 0, tempo: 0, acousticness: 0 }
+    { danceability: 0, energy: 0, valence: 0}
   );
 
   return {
     danceability: summedFeatures.danceability / totalSongs,
     energy: summedFeatures.energy / totalSongs,
     valence: summedFeatures.valence / totalSongs,
-    tempo: summedFeatures.tempo / totalSongs,
-    acousticness: summedFeatures.acousticness / totalSongs,
   };
 };
 
@@ -104,17 +99,18 @@ const generateColor = (features: AudioFeatures): string => {
 };
 
 const App: React.FC = () => {
+  const isLoggedIn = !!localStorage.getItem('access_token')
   // Simulated song's audio features
   const playlist: AudioFeatures[] = [
-    { danceability: 0.698, energy: 0.581, valence: 0.865, tempo: 139.89, acousticness: 0.262 },
-    { danceability: 0.898, energy: 0.734, valence: 0.94, tempo: 115.948, acousticness: 0.587 },
-    { danceability: 0.516, energy: 0.322, valence: 0.261, tempo: 148.005, acousticness: 0.473 },
-    { danceability: 0.571, energy: 0.761, valence: 0.681, tempo: 139.89, acousticness: 0.262 },
-    { danceability: 0.576, energy: 0.457, valence: 0.301, tempo: 139.89, acousticness: 0.262 },
-    { danceability: 0.532, energy: 0.623, valence: 0.403, tempo: 139.89, acousticness: 0.262 },
-    { danceability: 0.651, energy: 0.546, valence: 0.623, tempo: 139.89, acousticness: 0.262 },
-    { danceability: 0.696, energy: 0.39, valence: 0.395, tempo: 139.89, acousticness: 0.262 },
-    { danceability: 0.465, energy: 0.711, valence: 0.255, tempo: 139.89, acousticness: 0.262 },
+    { danceability: 0.698, energy: 0.581, valence: 0.865, },
+    { danceability: 0.898, energy: 0.734, valence: 0.94,},
+    { danceability: 0.516, energy: 0.322, valence: 0.261, },
+    { danceability: 0.571, energy: 0.761, valence: 0.681,  },
+    { danceability: 0.576, energy: 0.457, valence: 0.301,  },
+    { danceability: 0.532, energy: 0.623, valence: 0.403,  },
+    { danceability: 0.651, energy: 0.546, valence: 0.623,  },
+    { danceability: 0.696, energy: 0.39, valence: 0.395,  },
+    { danceability: 0.465, energy: 0.711, valence: 0.255,  },
   ]
 
   const [colors, setColors] = useState<string[]>([]);
@@ -137,10 +133,15 @@ const App: React.FC = () => {
   }, [])
 
   return (
-    <div className="App">
-      <h1>Spotify Song Color Generator</h1>
-      <ColorDisplay colors={colors} />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={
+          isLoggedIn ? <ColorDisplay colors={colors} /> : <Navigate to="/login" />
+        }/>
+        <Route path="/login" element={<Login />}/>
+        <Route path="/callback" element={<Callback />} /> 
+      </Routes>
+    </Router>
   );
 };
 

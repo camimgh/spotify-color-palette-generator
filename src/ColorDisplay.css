@@ -12,12 +12,12 @@
   display: grid;
   grid-template-columns: repeat(3, 100px); /* 3 columns, each 100px wide */
   grid-template-rows: repeat(3, 100px); /* 3 rows, each 100px tall */
-  gap: 10px; /* Gap between grid items */
+  /* gap: 10px; Gap between grid items */
 }
 
 /* Style each color box */
 .color-box {
   width: 100px; /* Box width */
   height: 100px; /* Box height */
-  border: 1px solid #ccc; /* Optional border for better visibility */
+  /* border: 1px solid #ccc; Optional border for better visibility */
 }
