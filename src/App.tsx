@@ -87,13 +87,13 @@ const generateColor = (features: AudioFeatures): string => {
   const { danceability, energy, valence } = features;
 
   // Map valence to hue (0–360) -> Blue (sad) to Red (happy)
-  const hue = mapRange(valence, 0, 1, 240, 60);
+  const hue = mapRange(valence, 0, 1, 0, 360);
 
   // Map energy to saturation (0–100%) -> More energy, more saturation
-  const saturation = mapRange(energy, 0, 1, 30, 100);
+  const saturation = mapRange(energy, 0, 1, 0, 100);
 
   // Map danceability to brightness (0–100%) -> Danceable songs are brighter
-  const brightness = mapRange(danceability, 0, 1, 40, 90);
+  const brightness = mapRange(danceability, 0, 1, 0, 100);
 
   return `hsl(${hue}, ${saturation}%, ${brightness}%)`;
 };
@@ -102,15 +102,15 @@ const App: React.FC = () => {
   const isLoggedIn = !!localStorage.getItem('access_token')
   // Simulated song's audio features
   const playlist: AudioFeatures[] = [
-    { danceability: 0.698, energy: 0.581, valence: 0.865, },
+    { danceability: 0.751, energy: 0.813, valence: 0.882, },
     { danceability: 0.898, energy: 0.734, valence: 0.94,},
     { danceability: 0.516, energy: 0.322, valence: 0.261, },
     { danceability: 0.571, energy: 0.761, valence: 0.681,  },
     { danceability: 0.576, energy: 0.457, valence: 0.301,  },
     { danceability: 0.532, energy: 0.623, valence: 0.403,  },
     { danceability: 0.651, energy: 0.546, valence: 0.623,  },
-    { danceability: 0.696, energy: 0.39, valence: 0.395,  },
     { danceability: 0.465, energy: 0.711, valence: 0.255,  },
+    { danceability: 0.585, energy: 0.842, valence: 0.962,},
   ]
 
   const [colors, setColors] = useState<string[]>([]);
