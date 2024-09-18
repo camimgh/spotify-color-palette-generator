@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import './ColorDisplay.css';
 
 interface AudioFeatures {
@@ -51,6 +50,7 @@ const kMeansClustering = (playlist: AudioFeatures[], k: number, maxIterations: n
     clusters = Array.from({ length: k }, () => []);
 
     // Assign each song to the closest centroid
+    // eslint-disable-next-line
     playlist.forEach((song) => {
       let closestCentroidIndex = 0;
       let minDistance = Infinity 
@@ -84,10 +84,9 @@ const mapRange = (
 
 // Function to generate a color based on audio features
 const generateColor = (features: AudioFeatures): string => {
-  const { danceability, energy, valence, tempo} = features;
+  const { danceability, energy,  tempo} = features;
 
   // Map valence to hue (0–360) -> Blue (sad) to Red (happy)
-//   const hue = mapRange(valence, 0, 1, 0, 360);
     const hue = mapRange(tempo, 60, 200, 0, 360)
 
   // Map energy to saturation (0–100%) -> More energy, more saturation
@@ -107,7 +106,6 @@ interface ColorDisplayProps {
 }
 
 const ColorDisplay: React.FC<ColorDisplayProps> = ( { playlistId, onBack }) => {
-    const navigate = useNavigate();
 
     const handleBackClick = () => {
         onBack();

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes,} from 'react-router-dom';
 import ColorDisplay from "./ColorDisplay";
 import Login from "./Login";
 import Callback from "./Callback";

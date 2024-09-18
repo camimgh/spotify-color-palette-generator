@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Playlist from "./Playlist";
 
-interface Playlist {
+interface PlaylistFeatures {
     id: string;
     name: string;
     description: string;
@@ -14,7 +14,7 @@ interface PlaylistSelectorProps {
 }
 
 const PlaylistSelector: React.FC<PlaylistSelectorProps> = ({ onSelectPlaylist }) => {
-    const [playlists, setPlaylists] = useState<Playlist[]>([]);
+    const [playlists, setPlaylists] = useState<PlaylistFeatures[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
@@ -60,7 +60,7 @@ const PlaylistSelector: React.FC<PlaylistSelectorProps> = ({ onSelectPlaylist })
         };
         
         fetchPlaylists();
-    }, []);
+    }, [navigate]);
 
     if (loading) return <div>Loading playlists...</div>;
     if (error) return <div>{error}</div>

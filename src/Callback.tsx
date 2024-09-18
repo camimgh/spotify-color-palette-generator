@@ -9,7 +9,6 @@ const Callback: React.FC = () => {
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const code = queryParams.get('code');
-    const state = queryParams.get('state');
 
     if (code) {
       const fetchAccessToken = async () => {
