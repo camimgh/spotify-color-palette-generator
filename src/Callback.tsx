@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Callback: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -13,19 +14,16 @@ const Callback: React.FC = () => {
     if (code) {
       const fetchAccessToken = async () => {
         try {
-          const response = await axios.post('https://accounts.spotify.com/api/token', new URLSearchParams({
-            'grant_type': 'authorization_code',
-            'code': code,
-            'redirect_uri': 'http://localhost:3000/callback',
-          }), {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'Authorization': `Basic ${btoa('0f7a19684fdd4fc2940aa0d59c3c6013:1f86aa6be7064be7a8033a3b83b8e26e')}`,
-            },
-          });
+            const response = await axios.post('/.netlify/functions/exchangeToken', new URLSearchParams({
+                code: code,
+                redirect_uri: process.env.REACT_APP_SPOTIFY_REDIRECT_URI || 'http://localhost:8888/callback',
+            }));
+            
+            console.log("Response from exchangeToken function:", response.data)
           const data = response.data;
           localStorage.setItem('access_token', data.access_token);
-          window.location.href = '/'; // Redirect to the home page or wherever you want
+          localStorage.setItem('refresh_token', data.refresh_token);
+          navigate('/')
         } catch (error) {
           console.error('Error fetching access token:', error);
         }
@@ -33,7 +31,7 @@ const Callback: React.FC = () => {
 
       fetchAccessToken();
     }
-  }, [location.search]);
+  }, [location.search, navigate]);
 
   return <div>Processing...</div>;
 };

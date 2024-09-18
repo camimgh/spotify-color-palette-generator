@@ -6,7 +6,7 @@ interface AudioFeatures {
   danceability: number;
   energy: number;
   valence: number;
-  tempo: number
+  tempo: number;
 }
 
 // Use euclidean distance to calculate distance between 2 songs
@@ -26,8 +26,8 @@ const averageAudioFeatures = (featuresArray: AudioFeatures[]): AudioFeatures => 
   const summedFeatures = featuresArray.reduce(
     (acc, features) => {
       acc.danceability += features.danceability;
-      acc.energy += features.energy;
       acc.valence += features.valence;
+      acc.energy += features.energy;
       acc.tempo += features.tempo
       return acc;
     },
@@ -38,7 +38,7 @@ const averageAudioFeatures = (featuresArray: AudioFeatures[]): AudioFeatures => 
     danceability: summedFeatures.danceability / totalSongs,
     energy: summedFeatures.energy / totalSongs,
     valence: summedFeatures.valence / totalSongs,
-    tempo: summedFeatures.tempo / totalSongs
+    tempo: summedFeatures.tempo / totalSongs,
   };
 };
 
@@ -84,14 +84,15 @@ const mapRange = (
 
 // Function to generate a color based on audio features
 const generateColor = (features: AudioFeatures): string => {
-  const { danceability, energy, valence, tempo } = features;
+  const { danceability, energy, valence, tempo} = features;
 
   // Map valence to hue (0–360) -> Blue (sad) to Red (happy)
 //   const hue = mapRange(valence, 0, 1, 0, 360);
-    const hue = mapRange(tempo, 0, 500, 0, 360)
+    const hue = mapRange(tempo, 60, 200, 0, 360)
 
   // Map energy to saturation (0–100%) -> More energy, more saturation
   const saturation = mapRange(energy, 0, 1, 0, 100);
+  console.log(energy)
 
   // Map danceability to brightness (0–100%) -> Danceable songs are brighter
   const brightness = mapRange(danceability, 0, 1, 0, 100);

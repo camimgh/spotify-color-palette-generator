@@ -4,12 +4,20 @@ import { useLocation } from "react-router-dom";
 const Login: React.FC = () => {
     const location = useLocation();
     const message = location.state?.message;
-    const clientId = '0f7a19684fdd4fc2940aa0d59c3c6013';
-    const redirectUri = 'http://localhost:3000/callback';
+
+    const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID || '';
+    const redirectUri = process.env.REACT_APP_SPOTIFY_REDIRECT_URI || 'localhost:3000/callback';
     const scope = 'playlist-read-private';
     const state = 'yIns5qUPcxoyrWfMh3ju';
 
+    console.log('clientId:', clientId)
+    console.log('redirectUri:', redirectUri)
+
     const handleLogin = () => {
+        if (!clientId) {
+            console.error("Spotify Client ID is missing")
+            return;
+        }
         window.location.href = `https://accounts.spotify.com/authorize?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&state=${state}`;
     };
 
