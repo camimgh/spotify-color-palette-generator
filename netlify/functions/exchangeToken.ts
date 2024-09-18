@@ -22,7 +22,7 @@ export const handler = async (event: any) => {
     };
   }
 
-  const params = new URLSearchParams(JSON.parse(event.body));
+  const params = new URLSearchParams(event.body);
   const code = params.get('code');
   const redirect_uri = params.get('redirect_uri') || redirectUri;
 

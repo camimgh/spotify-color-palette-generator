@@ -10,8 +10,6 @@ const Login: React.FC = () => {
     const scope = 'playlist-read-private';
     const state = 'yIns5qUPcxoyrWfMh3ju';
 
-    console.log('clientId:', clientId)
-    console.log('redirectUri:', redirectUri)
 
     const handleLogin = () => {
         if (!clientId) {
