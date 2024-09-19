@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Routes,} from 'react-router-dom';
 import ColorDisplay from "./ColorDisplay";
 import Login from "./Login";
@@ -10,6 +10,10 @@ import PlaylistSelector from "./PlaylistSelector";
 
 const App: React.FC = () => {
   const [selectedPlaylistId, setSelectedPlaylist] = useState<string | null>(null);
+
+  useEffect(() => {
+    console.log("Updated selectedPlaylistId:", selectedPlaylistId)
+  }, [selectedPlaylistId])
   const handleBack = () => {
     setSelectedPlaylist(null);
   }

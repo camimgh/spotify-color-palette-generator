@@ -91,7 +91,6 @@ const generateColor = (features: AudioFeatures): string => {
 
   // Map energy to saturation (0–100%) -> More energy, more saturation
   const saturation = mapRange(energy, 0, 1, 0, 100);
-  console.log(energy)
 
   // Map danceability to brightness (0–100%) -> Danceable songs are brighter
   const brightness = mapRange(danceability, 0, 1, 0, 100);
@@ -106,11 +105,11 @@ interface ColorDisplayProps {
 }
 
 const ColorDisplay: React.FC<ColorDisplayProps> = ( { playlistId, onBack }) => {
-
+    const [colors, setColors] = useState<string[]>([]);
     const handleBackClick = () => {
+        setColors([]);
         onBack();
     }
-    const [colors, setColors] = useState<string[]>([]);
     const processAudioFeatures = (features: AudioFeatures[]) => {
         const maxIterations = 10;
         const clusters = kMeansClustering(features, 9, maxIterations)
